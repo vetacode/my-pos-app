@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  directUrl = env("DIRECT_URL") //untuk sync ke db supabase
+  url       = env("DATABASE_URL") //untuk query
+}
+
+model Category {
+  id String @id @default(uuid())
+
+  name         String
+  productCount Int    @default(0)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  Products   Product[]
+}
+
+model Product {
+  id String @id @default(uuid())
+
+  name       String
+  price      Float
+  stock      Int
+  imageUrl   String?
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
